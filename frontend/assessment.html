@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LingoSight – Assessment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/assessment.css" />
+</head>
+<body>
+
+  <!-- Immersive Container (Full Height) -->
+  <div class="app-container" style="justify-content: flex-start; padding-top: 40px;">
+
+    <!-- Elegant Progress (Top Center) -->
+    <div class="progress-container">
+      <div class="progress-label">Question <span id="currentQ">1</span> of <span id="totalQ">4</span></div>
+      <div class="progress-track">
+        <div class="progress-bar-fill" id="progressFill" style="width: 25%"></div>
+      </div>
+    </div>
+
+    <!-- Main Content Centered -->
+    <main class="question-stream">
+      
+      <!-- Question Section -->
+      <div class="question-box" id="questionBox">
+        <h2 class="question-text-large" id="questionText">loading...</h2>
+        <button id="playQBtn" class="play-btn-round" aria-label="Play question">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+        </button>
+      </div>
+
+      <!-- Interaction Area -->
+      <div class="answer-section focused">
+        <!-- Text Input -->
+        <input type="text" id="answerInput" class="minimal-input" placeholder="Type your answer..." autocomplete="off" />
+        
+        <!-- Audio Controls -->
+        <div class="audio-controls-large" id="audioControls">
+          <button id="recordBtn" class="record-btn-large">
+            <div class="mic-icon-svg">🎤</div>
+          </button>
+          <div class="recording-status" id="recStatus">Tap to record</div>
+          <button id="stopBtn" class="stop-btn-round" disabled>■</button>
+          <audio id="playback" style="display:none"></audio>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Floating Action Button -->
+    <div class="action-footer">
+      <button class="fab-submit" id="submitBtn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </button>
+      <div id="questionType" style="display:none"></div>
+    </div>
+
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/assessment.js"></script>
+</body>
+</html>

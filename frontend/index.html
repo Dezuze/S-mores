@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LingoSight</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/home.css" />
+</head>
+<body>
+
+  <div class="app-container">
+
+    <header class="anim-enter delay-1">
+      <h1 class="logo">LingoSight.</h1>
+      <p class="subtitle">
+        Early insight. Equal opportunity.
+      </p>
+    </header>
+
+    <!-- STEP 1: ROLE SELECTION -->
+    <div id="roleSelection" class="step-container anim-enter delay-2">
+        <p style="text-align:center; color:var(--text-secondary); margin-bottom:20px;">Who is logging in?</p>
+        <div class="role-grid" style="display:flex; gap:20px; justify-content:center;">
+            <div class="test-card" onclick="selectRole('student')" style="width:200px; text-align:center;">
+                <div class="test-icon">🎓</div>
+                <h3>Student</h3>
+            </div>
+            <div class="test-card" onclick="selectRole('teacher')" style="width:200px; text-align:center;">
+                <div class="test-icon">👨‍🏫</div>
+                <h3>Teacher</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 2A: STUDENT DETAILS -->
+    <section class="child-details hidden" id="userInfo">
+      <h2 style="margin-bottom:20px; text-align:center;">Student Details</h2>
+      <input type="text" id="childName" placeholder="Your Name" />
+      <input type="number" id="childAge" placeholder="Age" min="3" max="100" />
+      
+      <div style="display:flex; flex-direction:column; gap:16px; margin-top:20px; width:100%; align-items:center;">
+          <button class="start-btn" id="continueToTestBtn" style="width:100%; max-width:320px;">Continue</button>
+          <button class="btn secondary" onclick="goBack('roleSelection')" style="background:transparent; color:var(--text-secondary); border:none; cursor:pointer;">Back</button>
+      </div>
+    </section>
+
+    <!-- STEP 2B: TEACHER LOGIN -->
+    <section class="child-details hidden" id="teacherLoginSection">
+        <h2 style="margin-bottom:20px; text-align:center;">Teacher Login</h2>
+        <input type="password" id="teacherPass" placeholder="Password (admin)" />
+        
+        <div style="display:flex; flex-direction:column; gap:16px; margin-top:20px; width:100%; align-items:center;">
+            <button class="start-btn" onclick="handleTeacherLogin()" style="width:100%; max-width:320px;">Login</button>
+            <button class="btn secondary" onclick="goBack('roleSelection')" style="background:transparent; color:var(--text-secondary); border:none; cursor:pointer;">Back</button>
+        </div>
+    </section>
+
+    <!-- STEP 3: TEST SELECTION -->
+    <section class="test-selection hidden" id="testSelection">
+        
+        <div class="test-card" data-type="language">
+            <div class="test-icon">🗣️</div>
+            <div class="test-info">
+                <h3>Language Assessment</h3>
+                <p>Read aloud and listen.</p>
+            </div>
+        </div>
+
+        <div class="test-card" data-type="mental">
+            <div class="test-icon">🧠</div>
+            <div class="test-info">
+                <h3>Mental Health Check</h3>
+                <p>Chat with our AI companion.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Final Action Button for Test Selection -->
+    <div id="finalActionContainer" class="hidden" style="margin-top:40px; width:100%; display:flex; flex-direction:column; align-items:center; gap:16px;">
+        <button class="start-btn" id="startTestBtn" style="width:100%; max-width:320px;">Start Check</button>
+        <button class="btn secondary" onclick="goBack('userInfo')" style="background:transparent; color:var(--text-secondary); border:none; cursor:pointer;">Back</button>
+    </div>
+
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

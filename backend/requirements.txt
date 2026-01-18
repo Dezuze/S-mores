@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+python-multipart
+transformers
+torch
+librosa
+soundfile
+nest-asyncio
+httpx
+numpy
+openai-whisper
+ffmpeg-python
+python-dotenv
+openai
+huggingface_hub

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Screening Result</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="css/home.css" />
+<link rel="stylesheet" href="css/result.css" />
+</head>
+<body>
+
+  <div class="app-container centered">
+    
+    <div class="result-card anim-enter">
+      
+      <h2 class="result-title">Screening Completed</h2>
+      <p class="result-subtitle">Here is the summary based on the session.</p>
+
+      <div class="student-info anim-enter delay-1" id="studentInfo">
+        <span><strong>Name:</strong> <span id="resName">-</span></span>
+        <span><strong>Age:</strong> <span id="resAge">-</span></span>
+      </div>
+
+      <div class="rating-section anim-enter delay-2">
+        <div class="rating-bar">
+          <span class="rating-dot green" id="dotGood"></span>
+          <span class="rating-dot yellow" id="dotMed"></span>
+          <span class="rating-dot red" id="dotRed"></span>
+        </div>
+
+        <div class="rating-text" id="ratingText">
+          Analyzing...
+        </div>
+
+        <!-- NEW: Detailed Analysis for Parents/Teachers -->
+        <div class="insight-box anim-enter delay-3" id="insightBox" style="display:none">
+            <h4>Evaluation</h4>
+            <p id="resAnalysis">...</p>
+        </div>
+      </div>
+
+      <p class="disclaimer anim-enter delay-4">
+        🔒 This is an early-support screening indicator, not a medical or clinical diagnosis.
+      </p>
+
+      <div class="action-footer anim-enter delay-4" style="margin-top: 24px;">
+           <button class="start-btn" onclick="window.location.href='index.html'">Detailed Report</button>
+           <button class="btn secondary" onclick="window.location.href='index.html'" style="margin-top: 10px;">Done</button>
+      </div>
+
+    </div>
+  </div>
+
+    <script>
+      // Render result saved in localStorage by loading poll
+      (function(){
+        const raw = localStorage.getItem('result');
+        if (!raw) return;
+        try {
+          const data = JSON.parse(raw);
+          document.getElementById('resName').textContent = data.name || data.child_name || '-';
+          document.getElementById('resAge').textContent = data.age || data.child_age || '-';
+
+          const ratingText = document.getElementById('ratingText');
+          const dotGood = document.getElementById('dotGood');
+          const dotMed = document.getElementById('dotMed');
+          const dotRed = document.getElementById('dotRed');
+
+          // Expect backend to provide a simple score or category
+          const category = (data.category || data.rating || '').toLowerCase();
+          dotGood.classList.remove('active');
+          dotMed.classList.remove('active');
+          dotRed.classList.remove('active');
+
+          if (category.includes('excellent') || category.includes('good') || category === 'low') {
+            dotGood.classList.add('active');
+            ratingText.textContent = data.summary || '✔ Good — No immediate concern';
+            ratingText.style.color = '#34c759';
+          } else if (category.includes('medium') || category.includes('moderate')) {
+            dotMed.classList.add('active');
+            ratingText.textContent = data.summary || '⚠ Monitor — some support may help';
+            ratingText.style.color = '#ff9500';
+          } else {
+            dotRed.classList.add('active');
+            ratingText.textContent = data.summary || '✖ Needs attention — consider follow-up';
+            ratingText.style.color = '#ff3b30';
+          }
+
+          // Show detailed analysis if available
+          if (data.analysis) {
+             const box = document.getElementById('insightBox');
+             const text = document.getElementById('resAnalysis');
+             text.textContent = data.analysis;
+             box.style.display = 'block';
+          }
+          
+          // Detailed Breakdown HIDDEN by request ("Just give one total result")
+          /*
+          if (data.detail && data.detail.breakdown && data.detail.breakdown.length > 0) {
+              // ... (breakdown logic removed/commented) ...
+          }
+          */ else {
+             // If no breakdown (e.g., Mental Health), ensure the main analysis box is robust
+             // The analysis text is already set above (line 93).
+             // Maybe add a specific 'Mental Health' label if category suggests it?
+             // Already handled by generic "Evaluation" header.
+          }
+          
+        } catch (e) {
+          console.error('Invalid result data', e);
+        }
+      })();
+    </script>
+
+  </body>
+  </html>

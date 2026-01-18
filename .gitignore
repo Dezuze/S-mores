@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+.venv
+venv/
+ENV/
+env/
+
+# Database
+*.db
+*.sqlite3
+
+# Uploads
+backend/uploads/
+uploads/
+
+# Large AI Models (Download them via code or external link)
+ai_service/text_classification_model/
+ai_service/asr_model/
+ai_service/tts_model/
+ai_service/models/
+
+# OS specific
+.DS_Store
+Thumbs.db

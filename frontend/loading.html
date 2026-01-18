@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Processing…</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="css/loading.css" />
+  <script src="js/config.js"></script>
+</head>
+<body>
+
+  <div class="app-container">
+    <div class="loading-container">
+      <div class="buffer-spinner"></div>
+      <div class="loading-title">Analyzing</div>
+      <div class="loading-sub">Please wait while we process the results</div>
+    </div>
+  </div>
+
+  <script>
+    // Poll backend for result using session_id stored in localStorage
+    async function pollResult() {
+      const session_id = localStorage.getItem('session_id');
+      if (!session_id) {
+        console.error('No session_id found');
+        return;
+      }
+
+        try {
+          const resp = await fetch(`${API_BASE}/result?session_id=${encodeURIComponent(session_id)}`);
+          if (resp.status === 200) {
+            const data = await resp.json();
+            // store result and navigate
+            localStorage.setItem('result', JSON.stringify(data));
+            window.location.href = 'result.html';
+            return;
+          }
+
+          // not ready yet, retry after delay
+        } catch (err) {
+          console.error('Error polling result', err);
+        }
+
+        setTimeout(pollResult, 2000);
+    }
+
+    pollResult();
+  </script>
+
+</body>
+</html>

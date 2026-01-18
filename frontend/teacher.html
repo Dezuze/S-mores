@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LingoSight Teacher Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/home.css">
+    <script src="js/config.js"></script>
+    <style>
+        body {
+            background: #f5f5f7;
+            overflow: hidden; /* App-like feel */
+        }
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+        
+        /* SIDEBAR */
+        .sidebar {
+            width: 320px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            overflow-y: auto;
+        }
+        .brand-area {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .brand-title {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1d1d1f 0%, #434344 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .student-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .student-item {
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border: 1px solid transparent;
+        }
+        .student-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .student-item.active {
+            border-color: var(--accent-color);
+            background: #eef5ff;
+        }
+        
+        .s-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .s-name { font-weight: 600; font-size: 16px; color: var(--text-main); }
+        .s-age { font-size: 13px; color: var(--text-secondary); background: #f0f0f0; padding: 2px 6px; border-radius: 4px; }
+        
+        .risk-badge {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 99px;
+            display: inline-block;
+        }
+        .risk-red { background: #ffeae9; color: #ff3b30; }
+        .risk-yellow { background: #fff5e0; color: #ff9500; }
+        .risk-green { background: #e0f8e5; color: #34c759; }
+        
+        /* MAIN CONTENT */
+        .main-view {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .profile-header {
+            margin-bottom: 32px;
+            width: 100%;
+        }
+        .p-name { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+        .p-meta { font-size: 16px; color: var(--text-secondary); }
+        
+        .section-card {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            margin-bottom: 24px;
+        }
+        .sec-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .history-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .h-date { min-width: 100px; color: var(--text-secondary); font-size: 14px; }
+        .h-content h5 { margin: 0 0 4px 0; font-size: 16px; font-weight: 600; }
+        .h-desc { font-size: 15px; color: var(--text-main); line-height: 1.4; }
+        
+        .empty-state {
+            margin-top: 100px;
+            align-self: center;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        
+        .logout-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    
+    <!-- Student List Sidebar -->
+    <div class="sidebar">
+        <div class="brand-area">
+            <div class="brand-title">LingoSight Teacher</div>
+            <div style="font-size:12px; color:#86868b; margin-top:4px;">Secure Dashboard</div>
+        </div>
+        
+        <div id="studentList" class="student-list">
+            <!-- Populated by JS -->
+            <div style="text-align:center; padding:20px; color:#999;">Loading...</div>
+        </div>
+    </div>
+    
+    <!-- Main Detail View -->
+    <div class="main-view">
+        <button class="logout-btn" onclick="window.location.href='index.html'">Logout</button>
+        
+        <div id="emptyState" class="empty-state">
+            <h2>Select a student</h2>
+            <p>Choose a student from the sidebar to view detailed analysis.</p>
+        </div>
+        
+        <div id="profileView" style="display:none; width:100%;">
+            <div class="profile-header">
+                <div class="p-name" id="pName">Student Name</div>
+                <div class="p-meta">Age: <span id="pAge">--</span> • ID: <span id="pID">--</span></div>
+            </div>
+            
+            <!-- Latest Mental Health Analysis -->
+            <div class="section-card">
+                <div class="sec-title">Latest Evaluation</div>
+                <div id="latestAnalysis" style="line-height:1.6; font-size:17px;">
+                    No recent data.
+                </div>
+            </div>
+            
+            <!-- Session History -->
+            <div class="section-card">
+                <div class="sec-title">History</div>
+                <div id="historyList">
+                    <!-- History Items -->
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let allData = [];
+
+    async function fetchData() {
+        try {
+            const res = await fetch('http://localhost:8000/teacher/all_results');
+            allData = await res.json();
+            renderSidebar();
+        } catch (e) {
+            console.error(e);
+            alert("Failed to load data. Is backend running?");
+        }
+    }
+    
+    function renderSidebar() {
+        const list = document.getElementById('studentList');
+        list.innerHTML = '';
+        
+        // Sort: Needs Attention first
+        allData.sort((a, b) => {
+             const riskScore = r => (r.latest_risk || '').includes('Attention') ? 2 : (r.latest_risk || '').includes('Moderate') ? 1 : 0;
+             return riskScore(b) - riskScore(a);
+        });
+        
+        allData.forEach((student, idx) => {
+            const div = document.createElement('div');
+            div.className = 'student-item';
+            div.onclick = () => showStudent(idx, div);
+            
+            let badgeClass = 'risk-green';
+            let riskText = 'Good';
+            
+            const r = student.latest_risk || 'Good';
+            if (r.includes('Attention')) { badgeClass = 'risk-red'; riskText = 'Attention'; }
+            else if (r.includes('Moderate')) { badgeClass = 'risk-yellow'; riskText = 'Monitor'; }
+            else if (r === '') { riskText = 'N/A'; badgeClass = 'risk-green'; }
+            
+            div.innerHTML = `
+                <div class="s-header">
+                    <span class="s-name">${student.name}</span>
+                    <span class="s-age">${student.age}y</span>
+                </div>
+                <div style="margin-top:6px;">
+                    <span class="risk-badge ${badgeClass}">${riskText}</span>
+                    <span style="font-size:12px; color:#888; margin-left:8px;">${student.sessions.length} sessions</span>
+                </div>
+            `;
+            list.appendChild(div);
+        });
+    }
+    
+    function showStudent(idx, element) {
+        // Highlight sidebar
+        document.querySelectorAll('.student-item').forEach(e => e.classList.remove('active'));
+        element.classList.add('active');
+        
+        const s = allData[idx];
+        
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('profileView').style.display = 'block';
+        
+        document.getElementById('pName').textContent = s.name;
+        document.getElementById('pAge').textContent = s.age;
+        document.getElementById('pID').textContent = s.user_id;
+        
+        // Latest Analysis
+        const sessions = s.sessions;
+        if (sessions.length > 0) {
+            // Find latest mental
+            const mental = sessions.find(x => x.type === 'mental');
+            if (mental && mental.analysis) {
+                 document.getElementById('latestAnalysis').innerHTML = `
+                    <div style="margin-bottom:12px; font-weight:600; color:${mental.category.includes('Att')?'#ff3b30':'#1d1d1f'}">Status: ${mental.category}</div>
+                    ${mental.analysis}
+                 `;
+            } else {
+                document.getElementById('latestAnalysis').textContent = "No detailed mental health analysis found.";
+            }
+            
+            // History
+            const hList = document.getElementById('historyList');
+            hList.innerHTML = '';
+            sessions.forEach(sess => {
+                const date = new Date(sess.timestamp).toLocaleDateString();
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.innerHTML = `
+                    <div class="h-date">${date}</div>
+                    <div class="h-content">
+                        <h5>${sess.type === 'mental' ? 'Mental Health Compliance' : 'Language Assessment'}</h5>
+                        <div class="h-desc">${sess.summary || 'Completed'}</div>
+                        ${sess.type==='mental' && sess.category? `<div style="font-size:12px; margin-top:4px; color:#666">Result: ${sess.category}</div>` : ''}
+                    </div>
+                `;
+                hList.appendChild(item);
+            });
+            
+        } else {
+            document.getElementById('latestAnalysis').textContent = "No sessions recorded.";
+            document.getElementById('historyList').innerHTML = "";
+        }
+    }
+    
+    fetchData();
+</script>
+
+</body>
+</html>
