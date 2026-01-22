@@ -69,45 +69,41 @@
 
 ```
 hacka/
-├── backend/                      # Main application backend
-│   ├── main.py                   # FastAPI app with all endpoints
-│   ├── .env                      # Environment variables (Gemini API key)
-│   ├── requirements.txt          # Python dependencies
-│   ├── app.db                    # SQLite database
-│   ├── uploads/                  # Audio file storage
-│   ├── test_api_status.py        # Gemini API verification script
-│   └── test_endpoints.py         # API testing utilities
-│
-├── fastapi_backend_package/      # ML Model Server
+├── ai_service/                   # ML Model Server (Port 8001)
 │   ├── app.py                    # FastAPI ML endpoints
 │   ├── requirements.txt          # ML dependencies
 │   ├── Dockerfile                # Docker configuration
-│   ├── run.bat                   # Windows startup script (port 8001)
+│   ├── run_ai_service.bat        # Windows startup script
 │   ├── asr_model/                # Whisper ASR model files
 │   ├── text_classification_model/# Dyslexia detection model
 │   └── tts_model/                # Text-to-speech model
 │
-├── index.html                    # Landing page (role selection)
-├── qn.html                       # Questionnaire page
-├── chat.html                     # Mental health chat interface
-├── loading.html                  # Processing/loading page
-├── result.html                   # Results display page
-├── teacher.html                  # Teacher dashboard
+├── backend/                      # Main application backend (Port 8000)
+│   ├── main.py                   # FastAPI app with all endpoints
+│   ├── .env                      # Environment variables
+│   ├── requirements.txt          # Python dependencies
+│   ├── app.db                    # SQLite database
+│   └── uploads/                  # Audio file storage
 │
-├── script.js                     # Main app logic
-├── qn.js                         # Questionnaire logic
-├── chat.js                       # Chat interface logic
-├── config.js                     # API configuration
+├── frontend/                     # User Interface (Port 3000)
+│   ├── css/                      # Stylesheets
+│   ├── js/                       # JavaScript logic
+│   ├── index.html                # Landing page
+│   ├── qn.html                   # Assessment interface
+│   ├── chat.html                 # Mental health chat
+│   ├── loading.html              # Processing state
+│   ├── result.html               # Results display
+│   └── teacher.html              # Teacher dashboard
 │
-├── style.css                     # Main stylesheet
-├── qn.css                        # Questionnaire styles
-├── resultloading.css             # Loading/result styles
-├── result_styles.css             # Result page specific styles
+├── assets/                       # Static assets
+│   └── images/                   # Mockups and resources
 │
-├── run_frontend.bat              # Frontend server launcher
-├── run_backend.bat               # Backend launcher (legacy)
-├── TESTING_GUIDE.md              # Manual testing instructions
-└── test_external_api.py          # External API testing script
+├── run_ai_service.bat            # ML Server launcher
+├── run_backend.bat               # Backend launcher
+├── run_frontend.bat              # Frontend launcher
+├── README.md                     # Project overview
+├── TESTING_GUIDE.md              # Detailed testing instructions
+└── TECHNICAL_DOCUMENTATION.md    # This file
 ```
 
 ---
@@ -482,7 +478,7 @@ index.html (Role Selection)
 
 2. **Install ML Server Dependencies:**
    ```bash
-   cd fastapi_backend_package
+   cd ai_service
    python -m venv .venv
    .venv\Scripts\activate
    pip install -r requirements.txt
@@ -504,8 +500,7 @@ index.html (Role Selection)
    uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
    # Terminal 3: ML Model Server
-   cd fastapi_backend_package
-   .venv\Scripts\activate
+   cd ai_service
    uvicorn app:app --host 0.0.0.0 --port 8001
    ```
 
@@ -532,7 +527,8 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
 
 **Build & Run:**
 ```bash
-cd fastapi_backend_package
+cd ai_service
+
 docker build -t lingosight-ml .
 docker run -p 8001:8000 lingosight-ml
 ```
@@ -570,9 +566,10 @@ See `TESTING_GUIDE.md` for comprehensive manual testing procedures.
 ### API Testing
 
 **Test Scripts:**
-- `backend/test_api_status.py`: Verify Gemini AI connectivity
-- `backend/test_endpoints.py`: Test backend endpoints
-- `test_external_api.py`: Test external tunnel URLs
+- `backend/test_api_status.py` (No longer in use)
+- `backend/test_endpoints.py` (No longer in use)
+- `test_external_api.py` (No longer in use)
+
 
 **Example Test:**
 ```python
